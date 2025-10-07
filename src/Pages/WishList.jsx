@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Container from '../Components/Container';
 import WishlistCard from '../Components/WishlistCard';
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 const WishList = () => {
     const [wishlist, setWishlist] = useState([]);
@@ -9,6 +10,9 @@ const WishList = () => {
         const savaList = JSON.parse(localStorage.getItem('wishlist'))
         savaList && setWishlist(savaList)
     }, [])
+    if (!wishlist.length) return <div className='text-2xl font-bold text-center my-10'>Wishlist not found.</div>
+
+
 
     // An Immediately Invoked Function Expression (IIFE) in JavaScript
     // is a function that is defined and executed immediately after it is created.'🔽⬇⬇⬇🔽
@@ -27,7 +31,17 @@ const WishList = () => {
         localStorage.setItem('wishlist', JSON.stringify(updateList))
 
     }
-
+    // Generate chart data
+    const totalsByCategory = {}
+    wishlist.forEach(product => {
+        const category = product.category
+        totalsByCategory[category] = (totalsByCategory[category] || 0) + product.price
+    })
+    const chartData = Object.keys(totalsByCategory).map(category => ({
+        category,
+        total: totalsByCategory[category]
+    }))
+    console.log(chartData);
     return (
         <Container>
             <div>
@@ -50,6 +64,22 @@ const WishList = () => {
                     {
                         sortItem.map(p => <WishlistCard handleRemove={handleRemove} key={p.id} p={p} />)
                     }
+                </div>
+            </div>
+
+            <div>
+                <h1 className='text-3xl font-semibold my-10'>Wishlist summary</h1>
+                <div className='h-80 p-4 rounded-2xl border bg-base-100 mb-10'>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="category" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="total" fill="#82ca9d" />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
         </Container>
