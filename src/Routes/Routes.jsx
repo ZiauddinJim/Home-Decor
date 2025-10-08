@@ -23,6 +23,10 @@ const Routes = createBrowserRouter([
             { path: '/productDetails/:id', Component: ProductDetails, },
         ],
     },
+    {
+        path: '/*',
+        Component: ErrorPage,
+    }
 ])
 
 export default Routes;
