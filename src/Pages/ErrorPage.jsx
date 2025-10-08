@@ -7,7 +7,9 @@ const ErrorPage = () => {
     return (
         <div>
             <Navbar />
-            <div>{error.message}</div>
+            {/* <div>{error.message}</div> */}
+            <div>No result found</div>
+
             <Footer />
         </div>
     );
